@@ -28,6 +28,7 @@ Ansible for Gost Server
 | --- | --- |
 | la | 洛杉矶 |
 | hk | 香港 |
+| sh | 上海 |
 
 机房字典
 
@@ -36,6 +37,7 @@ Ansible for Gost Server
 | bwg | 搬瓦工 |
 | hd | hostdare |
 | gcp | 谷歌云 |
+| local | 本地 |
 
 用途字典
 
