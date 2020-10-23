@@ -1,0 +1,15 @@
+[Unit]
+Description=Gost Service
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+PIDFile=/run/gost.pid
+ExecStart=/opt/gost/gost -C /opt/gost/config.json
+Restart=on-failure
+# Don't restart in the case of configuration error
+RestartPreventExitStatus=23
+
+[Install]
+WantedBy=multi-user.target

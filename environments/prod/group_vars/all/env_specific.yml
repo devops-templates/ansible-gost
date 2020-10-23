@@ -1,0 +1,15 @@
+---
+mysqlHost: 192.168.53.201
+mysqlPort: 3306
+mysqlUsername: root
+mysqlPassword:
+rabbitmqHost: 192.168.53.204
+rabbitmqPort: 5672
+rabbitmqUsername: guest
+rabbitmqPassword:
+redisHost: 192.168.53.202
+redisPort: 6379
+redisRequirepass:
+nacosHost: 192.168.53.203
+nacosPort: 8848
+

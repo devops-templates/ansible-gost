@@ -1,0 +1,8 @@
+{
+        "Debug": false,
+        "Retries": 0,
+        "ServeNodes": [
+                "https://:{{gostServerHttpsPort}}?probe_resist=code:404&secrets={{gostServerWorkDir}}/secrets.txt",
+                 "ws://127.0.0.1:{{gostServerWsPort}}?path=/ws&rbuf=4096&wbuf=4096&compression=false&secrets={{gostServerWorkDir}}/secrets.txt"
+        ]
+}

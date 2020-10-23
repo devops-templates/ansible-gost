@@ -1,0 +1,12 @@
+---
+- name: play for update ssl cert
+  hosts: "{{sslCertHost}}"
+  tasks:
+    - name: Upload ssl cert
+      copy:
+        src: "{{sslCertWorkspace}}/{{sslCertDomain}}"
+        dest: /etc/nginx/ssl
+        owner: root
+        group: root
+    - name: Restart nginx
+      shell: nginx -t && nginx -s reload

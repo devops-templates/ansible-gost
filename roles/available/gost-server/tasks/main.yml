@@ -1,0 +1,77 @@
+---
+- name: "Include deploy dest env dependent vars"
+  include_vars: '{{item}}'
+  with_first_found:
+    - '{{deployDestEnv}}.yml'
+  failed_when: false
+
+- name: Create project directory
+  file:
+    path: '{{ item }}'
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  with_items:
+    - "{{ gostServerWorkDir }}"
+
+- name: Check that the gost package exists
+  stat:
+    path: "{{gostServerWorkDir}}/{{gostServerBinName}}"
+  register: gost_bin_file_status
+
+- name: 'Prepare gost bin package'
+  block:
+    - name: 'Download gost package'
+      get_url:
+        url: "{{gostServerPackageUrl}}"
+        dest: "{{gostServerWorkDir}}/{{gostServerPackageName}}"
+
+    - name: 'Unzip gost package'
+      shell: "gunzip {{gostServerWorkDir}}/{{gostServerPackageName}}"
+  when: gost_bin_file_status.stat.exists == False
+
+- name: 'Chmod +x for gost bin'
+  file:
+    path: "{{gostServerWorkDir}}/{{gostServerBinName}}"
+    mode: u+x,g+x,o+x
+
+- name: Create a symbolic link
+  file:
+    src: "{{gostServerWorkDir}}/{{gostServerBinName}}"
+    dest: "{{gostServerWorkDir}}/gost"
+    state: link
+
+- name: Copy gost-server config file
+  template:
+    src: "{{ item }}.j2"
+    dest: "{{gostServerWorkDir}}/{{item}}"
+    force: yes
+  with_items:
+    - "config.json"
+    - "secrets.txt"
+
+- name: Copy gost.service on CentOS
+  template:
+    src: "gost.service.j2"
+    dest: "/usr/lib/systemd/system/gost.service"
+    force: yes
+  when: ansible_distribution|lower == 'centos'
+
+- name: Copy gost.service on Debian/Ubuntu
+  template:
+    src: "gost.service.j2"
+    dest: "/etc/systemd/system/gost.service"
+    force: yes
+  when: ansible_distribution|lower == 'debian' or ansible_distribution|lower == 'ubuntu'
+
+- name: Enable gost and ensure it is not masked
+  systemd:
+    name: gost
+    enabled: yes
+    masked: no
+
+- name: Make sure gost service is running
+  systemd:
+    name: gost
+    state: started

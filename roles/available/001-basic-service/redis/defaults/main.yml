@@ -1,0 +1,6 @@
+---
+redisVersion: 5.0.5-alpine
+redisContainerName: redis
+redisPort: 6379
+redisDataDir: /data/var/lib/redis/data
+redisConfDir: /data/var/lib/redis/conf

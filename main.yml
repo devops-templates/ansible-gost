@@ -1,0 +1,6 @@
+---
+- name: gost-server
+  hosts: gost_server
+  roles:
+    - { role: gost-server, tags: ['gost-server'] }
+

@@ -1,0 +1,6 @@
+---
+- name: Log into private registry
+  docker_login:
+    registry: "{{deployDockerRegistryHost}}"
+    username: "{{deployDockerRegistryUsername}}"
+    password: "{{deployDockerRegistryPassword}}"

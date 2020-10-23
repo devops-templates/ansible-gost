@@ -1,0 +1,7 @@
+---
+gostNginxServerName:
+gostServerUsers:
+  - {username: admin, password: 'Dv3SNGuK7Qc9M9Na'}
+  - {username: user1, password: '22EbWxm4xGr7LU8t'}
+  - {username: user2, password: '7HHxGRSvnxp3Qqod'}
+

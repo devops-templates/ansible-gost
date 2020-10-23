@@ -1,0 +1,40 @@
+---
+- name: Install nacos container
+  docker_container:
+    name: "{{ nacosContainerName }}"
+    image: "nacos/nacos-server:{{ nacosVersion }}"
+    restart_policy: unless-stopped
+    state: started
+    detach: yes
+    ports:
+      - "{{ nacosPort }}:8848"
+    env:
+      MODE: standalone
+      MYSQL_DATABASE_NUM: '1'
+      SPRING_DATASOURCE_PLATFORM: mysql
+      MYSQL_SERVICE_HOST: "{{mysqlHost}}"
+      MYSQL_SERVICE_PORT: '{{mysqlPort|quote}}'
+      MYSQL_SERVICE_DB_NAME: nacos_config
+      MYSQL_SERVICE_USER: "{{mysqlUsername}}"
+      MYSQL_SERVICE_PASSWORD: "{{mysqlPassword}}"
+      NACOS_SERVER_IP: "{{nacosHost}}"
+      JVM_XMX: 1g
+      JVM_XMS: 512m
+      JVM_XMN: 512m
+  tags:
+    - install_nacos
+
+- name: Stop nacos container
+  docker_container:
+    name: "{{ nacosContainerName }}"
+    state: stopped
+  tags:
+    - uninstall_nacos
+
+- name: Remove nacos container
+  docker_container:
+    name: "{{ nacosContainerName }}"
+    state: absent
+  tags:
+    - uninstall_nacos
+

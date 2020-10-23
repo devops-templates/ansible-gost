@@ -1,0 +1,13 @@
+---
+- name: Update rc.local
+  template:
+    src: "{{ item }}.j2"
+    dest: "/etc/rc.d/{{ item }}"
+    force: yes
+    owner: root
+    group: root
+    mode: 0755
+  with_items:
+    - "rc.local"
+  tags:
+    - rc-local 

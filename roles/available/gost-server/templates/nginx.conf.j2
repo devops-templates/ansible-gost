@@ -1,0 +1,23 @@
+server {
+  listen 80;
+  server_name {{gostNginxServerName}};
+  return 301 https://$host$request_uri;
+}
+
+server {
+  listen  443 ssl;
+  ssl on;
+  ssl_certificate       /opt/gost/ssl/gost.crt;
+  ssl_certificate_key   /opt/gost/ssl/gost.key;
+  ssl_protocols         TLSv1 TLSv1.1 TLSv1.2;
+  ssl_ciphers           HIGH:!aNULL:!MD5;
+  server_name           {{gostNginxServerName}};
+  location /ws {
+          proxy_redirect off;
+          proxy_pass http://127.0.0.1:{{gostServerWsPort}};
+          proxy_http_version 1.1;
+          proxy_set_header Upgrade $http_upgrade;
+          proxy_set_header Connection "upgrade";
+          proxy_set_header Host $http_host;
+  }
+}

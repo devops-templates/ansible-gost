@@ -1,0 +1,9 @@
+---
+gostServerVersion: 2.11.1
+gostServerBinName: "gost-linux-amd64-{{gostServerVersion}}"
+gostServerPackageName: "{{gostServerBinName}}.gz"
+gostServerPackageUrl: "https://github.com/ginuerzh/gost/releases/download/v{{gostServerVersion}}/{{gostServerPackageName}}"
+gostServerName: gost-server
+gostServerHttpsPort: 8443
+gostServerWsPort: 11111
+gostServerWorkDir: "/opt/gost"

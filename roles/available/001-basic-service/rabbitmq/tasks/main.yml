@@ -1,0 +1,31 @@
+---
+- name: Create rabbitmq directory
+  file:
+    path: '{{ item }}'
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  with_items:
+    - "{{ rabbitmqDataDir }}" 
+  tags:
+    - install_rabbitmq 
+
+- name: Install rabbitmq container
+  docker_container:
+    name: "{{ rabbitmqContainerName }}"
+    image: rabbitmq:{{ rabbitmqVersion }}
+    restart_policy: unless-stopped
+    state: started
+    detach: yes
+    ports:
+      - "{{ rabbitmqPort }}:5672"
+      - "{{ rabbitmqManagementPort }}:15672"
+    volumes:
+      - "{{ rabbitmqDataDir }}:/var/lib/rabbitmq"
+    env:
+      RABBITMQ_DEFAULT_USER: "{{ rabbitmqDefaultUser }}"
+      RABBITMQ_DEFAULT_PASS: "{{ rabbitmqDefaultPass }}"
+  tags:
+    - install_rabbitmq 
+

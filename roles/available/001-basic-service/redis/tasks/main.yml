@@ -1,0 +1,72 @@
+---
+- name: Create redis directory
+  file:
+    path: '{{ item }}'
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  with_items:
+    - "{{ redisDataDir }}" 
+    - "{{ redisConfDir }}" 
+  tags:
+    - install_redis 
+
+- name: Copy redis config files
+  template:
+    src: "{{ item }}.j2"
+    dest: "{{ redisConfDir }}/{{ item }}"
+    force: yes
+  with_items:
+    - "redis.conf"
+  tags:
+    - install_redis 
+
+- name: Disable transparent hugepage
+  shell: |
+    echo never > /sys/kernel/mm/transparent_hugepage/enabled && 
+    echo never > /sys/kernel/mm/transparent_hugepage/defrag
+  tags:
+    - install_redis 
+
+- name: Config sysctl for redis
+  sysctl: 
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+  with_items:
+    - { name: "vm.overcommit_memory", value: "1" }
+  tags:
+    - install_redis
+
+- name: Install redis container
+  docker_container:
+    name: "{{ redisContainerName }}"
+    image: redis:{{ redisVersion }}
+    restart_policy: unless-stopped
+    state: started
+    detach: yes
+    command: redis-server /usr/local/etc/redis/redis.conf
+    sysctls:
+      net.core.somaxconn: 4096 
+    ports:
+      - "{{ redisPort }}:6379"
+    volumes:
+      - "{{ redisDataDir }}:/data"
+      - "{{ redisConfDir }}/redis.conf:/usr/local/etc/redis/redis.conf"
+  tags:
+    - install_redis
+
+- name: Stop redis container
+  docker_container:
+    name: "{{ redisContainerName }}"
+    state: stopped
+  tags:
+    - uninstall_redis
+
+- name: Remove redis container
+  docker_container:
+    name: "{{ redisContainerName }}"
+    state: absent
+  tags:
+    - uninstall_redis
+

@@ -1,0 +1,6 @@
+---
+nginxRootConfDir: /etc/nginx
+nginxSslConfDir: "{{nginxRootConfDir}}/ssl"
+nginxConfDir: "{{nginxRootConfDir}}/conf.d"
+nginxAvailableConfDir: "{{nginxConfDir}}/available"
+nginxEnabledConfDir: "{{nginxConfDir}}/enabled"

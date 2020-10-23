@@ -1,0 +1,52 @@
+---
+- name: Install Nginx
+  yum:
+      name:
+          - nginx
+      state: present
+  tags:
+      - install_nginx
+
+- name: Create nginx config directory
+  file:
+    path: '{{ item }}'
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  with_items:
+    - "{{nginxSslConfDir}}"
+    - "{{nginxAvailableConfDir}}"
+    - "{{nginxEnabledConfDir}}"
+  tags:
+    - install_nginx  
+
+- name: Update nginx.conf
+  template:
+    src: "{{item.src}}.j2"
+    dest: "{{item.dest}}/{{item.src}}"
+    owner: root
+    group: root
+    mode: '0644'
+  with_items:
+    - { src: nginx.conf, dest: "{{nginxRootConfDir}}" }
+    - { src: options-ssl-nginx.conf, dest: "{{nginxSslConfDir}}"}
+    - { src: ssl-dhparam.pem, dest: "{{nginxSslConfDir}}"}
+  tags:
+    - install_nginx
+
+- name: Enable nginx and ensure it is not masked
+  systemd:
+    name: nginx
+    enabled: yes
+    masked: no
+  tags:
+      - install_nginx
+
+- name: Make sure nginx service is running
+  systemd:
+    name: nginx
+    state: started
+  tags:
+      - install_nginx
+

@@ -1,0 +1,9 @@
+---
+#
+# Tasks to be applied to all servers
+#
+
+- name: Check connectivity
+  ping:
+    data: alive
+  tags: check

@@ -1,0 +1,16 @@
+---
+#
+# Tasks to be applied to some servers
+#
+
+# Add tasks for a specific role to this playbook...
+
+- name: Install OpenJDK8
+  yum:
+      name:
+          - java-1.8.0-openjdk
+          - java-1.8.0-openjdk-devel
+      state: present
+  tags:
+      - openjdk8
+

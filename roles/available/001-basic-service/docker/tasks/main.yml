@@ -1,0 +1,62 @@
+---
+- name: Remove old Docker
+  yum:
+      name:
+          - docker 
+          - docker-client 
+          - docker-client-latest 
+          - docker-common 
+          - docker-latest 
+          - docker-latest-logrotate 
+          - docker-logrotate 
+          - docker-selinux 
+          - docker-engine-selinux 
+          - docker-engine
+      state: removed
+  tags:
+      - remove_docker
+
+- name: Enable Aliyun docker Repo
+  shell: yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+  tags:
+      - install_docker
+
+- name: Makecache fast
+  shell: yum makecache fast
+  tags:
+      - install_docker
+
+- name: Install Docker
+  yum:
+      name:
+          - device-mapper-persistent-data
+          - lvm2
+          - docker-ce
+      state: present
+  tags:
+      - install_docker
+
+- name: Enable Docker and ensure it is not masked
+  systemd:
+    name: docker
+    enabled: yes
+    masked: no
+  tags:
+      - install_docker
+
+- name: Make sure docker service is running
+  systemd:
+    state: started
+    name: docker
+  tags:
+      - install_docker
+
+- name: Install docker python sdk
+  yum:
+    name:
+      - python-docker-py
+    state: present
+  tags:
+    - install_docker
+    - install_docker_python_sdk
+

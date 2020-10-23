@@ -1,0 +1,11 @@
+[sh_local]
+sh-local-srv-33-101 ansible_port=22 ansible_host=192.168.33.101
+sh-local-srv-33-102 ansible_port=22 ansible_host=192.168.33.102
+
+### Applications Begin ###
+
+[gost_server]
+sh-local-srv-33-101
+sh-local-srv-33-102
+
+### Applications End ###

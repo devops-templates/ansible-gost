@@ -1,0 +1,8 @@
+---
+rabbitmqVersion: 3.7.17-management-alpine
+rabbitmqContainerName: rabbitmq
+rabbitmqPort: 5672
+rabbitmqManagementPort: 15672
+rabbitmqDefaultUser: guest
+rabbitmqHostname: "{{ inventory_hostname }}"
+rabbitmqDataDir: /data/var/lib/rabbitmq
