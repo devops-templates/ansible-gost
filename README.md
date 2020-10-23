@@ -60,6 +60,15 @@ Ansible for Gost Server
 ansible-playbook provisioning.yml -i environments/prod -u root --ask-pass
 ```
 
+## 安装 gost
+
+```sh
+ansible-playbook main.yml -i environments/prod -u sysops --become --key-file=files/ssh-key/ssh-key -t gost-server
+```
+
+## 安装其它服务参考
+
+
 ### 安装 docker 服务
 
 ```sh
